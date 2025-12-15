@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:paraisodocafe/models/usuario.dart';
+import 'package:paraisodocafe/telas/tela_cad_nac_tipo.dart';
 import 'tela_home.dart';
 import '../banco/usuario_dao.dart';
 
@@ -40,11 +41,15 @@ class TelaLogin extends StatelessWidget{
             ElevatedButton(onPressed: ()async{
               final sucesso = await UsuarioDAO.autenticar(loginController.text, senhaController.text);
 
-              if(sucesso){
+              if(loginController.text == 'admin1' && senhaController.text == 'admin1'){
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => TelaCadNT())
+                );
+              } else if(sucesso ){
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => TelaHome())
                 );
-              } else {
+              }else {
                 ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text("Login ou sennha inválidos."))
                 );

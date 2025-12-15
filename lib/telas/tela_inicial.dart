@@ -13,19 +13,32 @@ class TelaInicial extends StatelessWidget{
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          ElevatedButton(onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => TelaCadastro())
-            );
-          }, child: Text("Realizar Cadastro")),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(style: ElevatedButton.styleFrom(
+              backgroundColor:  Color(0xFFDBC2A6),
+              padding: const EdgeInsets.all(14),
+            ),onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => TelaCadastro())
+              );
+            }, child: Text("Realizar Cadastro",style: TextStyle(color: Color(0xFFFFFFFF)),)),
+          ),
+
           const SizedBox(height: 30,),
-          ElevatedButton(onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => TelaLogin())
-            );
-          }, child: Text("Realizar Login"))
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(style: ElevatedButton.styleFrom(
+              backgroundColor:  Color(0xFFDBC2A6),
+              padding: const EdgeInsets.all(14),
+            ),onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => TelaLogin())
+              );
+            }, child: Text("Realizar Login",style: TextStyle(color: Color(0xFFFFFFFF)),)),
+          ),
         ],
       ),
       ),

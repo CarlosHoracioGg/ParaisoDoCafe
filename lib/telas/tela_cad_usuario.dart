@@ -52,6 +52,7 @@ class TelaCadastro extends StatelessWidget{
                   loginController.text,
                   senhaController.text
               );
+              final imprimir = await UsuarioDAO.imprimir();
               if (sucesso > 0) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -63,6 +64,7 @@ class TelaCadastro extends StatelessWidget{
                   context,
                   MaterialPageRoute(builder: (context) => TelaHome()),
                 );
+                return imprimir;
               }else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text("Erro ao cadastrar usuário."), backgroundColor: Colors.red,),
@@ -78,10 +80,16 @@ class TelaCadastro extends StatelessWidget{
             ElevatedButton(onPressed: () async{
               await UsuarioDAO.imprimir();
 
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => TelaLogin()),
-              );
+              final imprimir = await UsuarioDAO.imprimir();
+
+              if(imprimir != null){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => TelaLogin()),
+                );
+                return imprimir;
+              }
+
 
 
             }, child: Text("Login")),

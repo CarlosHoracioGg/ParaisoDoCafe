@@ -16,7 +16,7 @@ class TelaCadNT extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFFDBC2A6),
-      appBar: AppBar(title: const Text('Cadatsro de Nacionalidade e Tipo'),
+      appBar: AppBar(title: const Text('Cadastro de Nacionalidade e Tipo'),
         titleTextStyle: TextStyle(color: Color(0xFFFFFFFF)),
         backgroundColor: Color(0xFF414A37),
       ),
@@ -83,8 +83,9 @@ class TelaCadNT extends StatelessWidget {
                     SnackBar(content: Text("Login ou sennha inválidos."))
                 );
               }
-            }, child: Text('Realizar Cadastro')),
+            }, child: Text('Cadastro Nacionalidade')),
 
+            const SizedBox(height: 20,),
             ElevatedButton(onPressed: () async{
 
               final solucao = await TipoDAO.cadastrarTipo(
@@ -108,7 +109,12 @@ class TelaCadNT extends StatelessWidget {
                 );
               }
 
-              },child: Text("Cadastro Tipo"))
+              },child: Text("Cadastro Tipo")),
+            const SizedBox(height: 20,),
+
+            ElevatedButton(onPressed: ()async{
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>TelaCadProduto()));
+            }, child: Text("Pular Etapa"))
 
 
           ],

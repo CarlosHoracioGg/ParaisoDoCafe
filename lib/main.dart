@@ -4,6 +4,7 @@ import 'package:paraisodocafe/telas/tela_cad_produto.dart';
 import 'package:paraisodocafe/telas/tela_cad_usuario.dart';
 import 'package:paraisodocafe/telas/tela_home.dart';
 import 'package:paraisodocafe/telas/tela_inicial.dart';
+import 'package:paraisodocafe/telas/tela_login.dart';
 import 'package:paraisodocafe/telas/tela_produto.dart';
 import 'package:paraisodocafe/telas/tela_sobrenos.dart';
 
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       // desativa o modo banner ( que exibe conteudo).
       debugShowCheckedModeBanner: false,
-      home: TelaProduto(),
+      home: TelaInicial(),
 
     );
   }

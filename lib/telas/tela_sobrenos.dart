@@ -49,8 +49,7 @@ class TelaSobreNosState extends State<TelaSobreNos>{
                       child: Column(
                         children: [
                           Text("Somos um grupo de programadores iniciantes no desenvolvimento de aplicativos mobile na"
-                              " linguagem dart, sendo este nosso primeiro projeto pessoal de todo grupo, onde nos "
-                              "empenhamos em nossas idéias e conhecimento, trazendo uma boa experiência em nosso aplicativo.",
+                              " linguagem dart, sendo este nosso primeiro projeto pessoal de todo grupo, trazendo uma boa experiência em nosso aplicativo.",
                             style: TextStyle(color: Color(0xFFFFFFFF),fontSize: 18),
                           ),
                         ],
@@ -70,7 +69,7 @@ class TelaSobreNosState extends State<TelaSobreNos>{
                       child: Padding(padding: EdgeInsets.all(10),
                         child: Column(
                             children: [
-                              Text("Buscamos aplicar nesse projeto prático todo nosso conhecimento em desenvolvimento mobile "
+                              Text("Aplicar todo nosso conhecimento em desenvolvimento mobile "
                                   "adquirido durante o curso de Análise e Desenvolvimento de Sistemas realizado pelo Senai. ",
                                 style: TextStyle(color: Color(0xFFFFFFFF),fontSize: 18),),
                             ],
@@ -96,24 +95,24 @@ class TelaSobreNosState extends State<TelaSobreNos>{
                           const SizedBox(height: 20,),
                           Text("Christopher Ribeiro",style: TextStyle(color: Color(0xFFFFFFFF),fontSize: 18),),
                           const SizedBox(height: 10,),
-                          Text("Insira uma frase",style: TextStyle(color: Color(0xFFFFFFFF),fontSize: 18),),
+                          Text("'O Palmeiras não tem Mundial!'",style: TextStyle(color: Color(0xFFFFFFFF),fontSize: 18),),
                           const SizedBox(height: 20,),
                           Text("Gabriel Demarco",style: TextStyle(color: Color(0xFFFFFFFF),fontSize: 18),),
                           const SizedBox(height: 10,),
-                          Text("Insira uma frase",style: TextStyle(color: Color(0xFFFFFFFF),fontSize: 18),),
+                          Text("'Tudo começa pelo sangue.'",style: TextStyle(color: Color(0xFFFFFFFF),fontSize: 18),),
                           const SizedBox(height: 20,),
                           Text("Gabriel Soares",style: TextStyle(color: Color(0xFFFFFFFF),fontSize: 18),),
                           const SizedBox(height: 10,),
-                          Text("insira uma frase",style: TextStyle(color: Color(0xFFFFFFFF),fontSize: 18),),
+                          Text("'Tudo se cria, nada se copia.'",style: TextStyle(color: Color(0xFFFFFFFF),fontSize: 18),),
                           const SizedBox(height: 20,),
                           Text("Matheus Rosa",style: TextStyle(color: Color(0xFFFFFFFF),fontSize: 18),),
                           const SizedBox(height: 10,),
-                          Text("insira uma frase",style: TextStyle(color: Color(0xFFFFFFFF),fontSize: 18),),
+                          Text("'Quer marretada do Thor?'",style: TextStyle(color: Color(0xFFFFFFFF),fontSize: 18),),
                           const SizedBox(height: 20,),
                           Text("Vitor Lisboa",style: TextStyle(color: Color(0xFFFFFFFF),fontSize: 18),),
                           const SizedBox(height: 10,),
-                          Text("insira uma frase",style: TextStyle(color: Color(0xFFFFFFFF),fontSize: 18),),
-                          const SizedBox(height: 20,),
+                          Text("'Preto tipo A.'",style: TextStyle(color: Color(0xFFFFFFFF),fontSize: 18),),
+                          const SizedBox(height: 1000,),
                         ],
                       ),
                     ),

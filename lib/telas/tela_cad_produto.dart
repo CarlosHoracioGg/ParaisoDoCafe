@@ -52,28 +52,33 @@ class TelaCadProdutoState extends State<TelaCadProduto>{
 
   Widget build(BuildContext context){
     return Scaffold(
-      appBar: AppBar(title: const Text('Cadastro de Produtos'),),
+      backgroundColor:  Color(0xFFDBC2A6),
+      appBar: AppBar(title: const Text('Cadastro de Produtos', style: TextStyle(color: Color(0xFFFFFFFF)),),
+        backgroundColor: Color(0xFF414A37),),
       body: Padding(padding: EdgeInsets.all(40),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text("Cadastre o Produto"),
+          Text("Cadastre o Produto", style: TextStyle(color: Color(0xFFFFFFFF)),),
           TextFormField(
-            decoration: InputDecoration(labelText: 'Nome:', labelStyle: TextStyle(fontSize: 15)),
+            style: TextStyle(color: Color(0xFFFFFFFF)),
+            decoration: InputDecoration(labelText: 'Nome:', labelStyle: TextStyle(fontSize: 15, color: Color(
+                0xFF000000)), ),
             controller: nomeController,
           ),
           TextFormField(
-            decoration: InputDecoration(labelText: 'Descrição:', labelStyle: TextStyle(fontSize: 15)),
+            style: TextStyle(color: Color(0xFFFFFFFF)),
+            decoration: InputDecoration(labelText: 'Descrição:', labelStyle: TextStyle(fontSize: 15, color: Color(0xFF000000))),
             controller: descController,
           ),
-          Text("nacionalidade"),
+          Text("Nacionalidade", style: TextStyle(color: Color(0xFFFFFFFF)),),
 
           //Lista Nacionalidade
           DropdownButtonFormField<String>(
               items: nacioExistente.map((nacionalidade){
                 return DropdownMenuItem<String>(
                     value: nacionalidade.nome,
-                    child: Text("${nacionalidade.nome}"),
+                    child: Text("${nacionalidade.nome}", style: TextStyle(color: Color(0xFF000000)),),
                 );
               }).toList(), onChanged: (value) {
               nacionalidadeSelecionada = value;
@@ -90,7 +95,7 @@ class TelaCadProdutoState extends State<TelaCadProduto>{
               items: tipoExistente.map((tipo){
                 return DropdownMenuItem<String>(
                   value: tipo.nome,
-                  child: Text("${tipo.nome}"),
+                  child: Text("${tipo.nome}", style: TextStyle(color: Color(0xFF000000)),),
                 );
               }).toList() ,
               onChanged: (value) {

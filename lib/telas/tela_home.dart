@@ -1,204 +1,182 @@
 import 'package:flutter/material.dart';
-//import '../services/weather_service.dart';
+import 'package:paraisodocafe/models/produto.dart';
+import 'package:paraisodocafe/telas/tela_login.dart';
+import 'package:paraisodocafe/telas/tela_produto.dart';
+import '../banco/produto_dao.dart';
 
 class TelaHome extends StatefulWidget {
-  const TelaHome({super.key});
+  const TelaHome({Key? key}) : super(key: key);
 
   @override
   State<TelaHome> createState() => _TelaHomeState();
 }
 
 class _TelaHomeState extends State<TelaHome> {
-  Map<String, dynamic>? weatherData;
-  String recommendation = "";
-  bool loading = true;
+  final TextEditingController _tempController = TextEditingController();
+  List<Produto> cafesRecomendados = [];
+  String mensagem = "";
+
+  // 
+  String definirClima(double temp) {
+    if (temp <= 15) {
+      return "frio";
+    } else if (temp <= 25) {
+      return "ameno";
+    } else {
+      return "calor";
+    }
+  }
+
+  // Busca cafés do banco e recomenda
+  Future<void> buscarRecomendacoes() async {
+    double? temperatura = double.tryParse(_tempController.text);
+
+    if (temperatura == null) {
+      setState(() {
+        mensagem = "Digite uma temperatura válida.";
+        cafesRecomendados = [];
+      });
+      return;
+    }
+
+    String clima = definirClima(temperatura);
+
+
+    List<Produto> todosCafes = await ProdutoDAO.listarTodos();
+
+    List<Produto> recomendados = [];
+
+    // 
+    if (clima == "frio") {
+      recomendados = todosCafes.take(3).toList();
+    } else if (clima == "ameno") {
+      recomendados = todosCafes.skip(1).take(3).toList();
+    } else {
+      recomendados = todosCafes.reversed.take(3).toList();
+    }
+
+    setState(() {
+      cafesRecomendados = recomendados;
+      mensagem =
+      "Cafés recomendados para $temperatura°C (${clima.toUpperCase()}):";
+    });
+  }
 
   @override
-  void initState() {
-    super.initState();
-    //loadWeather();
+  void dispose() {
+    _tempController.dispose();
+    super.dispose();
   }
-
-  /* Future<void> loadWeather() async {
-    try {
-      WeatherService service = WeatherService();
-      weatherData = await service.getWeather("São Paulo");
-
-      generateRecommendation();
-
-      setState(() {
-        loading = false;
-      });
-    } catch (e) {
-      setState(() => loading = false);
-    }
-  }
-
-  void generateRecommendation() {
-    if (weatherData == null) return;
-
-    double temp = weatherData!["main"]["temp"];
-    String condition = weatherData!["weather"][0]["main"];
-
-    if (temp <= 18) {
-      recommendation = "☕ Está frio! Recomendamos um cappuccino bem quente.";
-    } else if (temp >= 30) {
-      recommendation = "🥤 Calorão! Que tal um café gelado (iced coffee)?";
-    } else if (condition.contains("Rain")) {
-      recommendation = "🌧 Chuvoso! Um mocha quente combina perfeitamente.";
-    } else {
-      recommendation = "😄 Clima ameno! Experimente nosso café especial do dia.";
-    }
-  }*/
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: _buildDrawer(),
+      backgroundColor:  Color(0xFFDBC2A6),
       appBar: AppBar(
+        title: const Text("Recomendação de Cafés", style: TextStyle(color: Color(0xFFFFFFFF)),),
         backgroundColor: Color(0xFF414A37),
-        title: const Text(
-          "PARAÍSO DO CAFÉ",
-          style: TextStyle(color: Colors.white),
-        ),
       ),
-      body: loading
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
+      body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              "PREVISÃO DO TEMPO",
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF4B1F0E),
-              ),
-            ),
-            const SizedBox(height: 10),
-            _buildWeatherCard(),
-            const SizedBox(height: 20),
-
-            // ----------- RECOMENDAÇÃO -----------
-            Text(
-              recommendation,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: Colors.brown,
-              ),
-            ),
-
-            const SizedBox(height: 30),
-
-            const Text(
-              "MUNDO CAFÉ - NOTÍCIAS",
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF4B1F0E),
-              ),
+              "Informe a temperatura (°C):",
+              style: TextStyle(fontSize: 18, color: Color(0xFFFFFFFF)),
             ),
 
             const SizedBox(height: 10),
 
-            _buildNewsItem(
-              "Café inicia novembro em alta...",
-              "Mercado responde positivamente...",
-              "https://i.imgur.com/VR9Y8Zx.jpeg",
+            TextField(
+              controller: _tempController,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: "Ex: 22",
+              ),
             ),
-          ],
-        ),
-      ),
-    );
-  }
 
-  Drawer _buildDrawer() {
-    return Drawer(
-      child: Container(
-        color: const Color(0xFF4B1F0E),
-        child: ListView(
-          padding: const EdgeInsets.only(top: 40),
-          children: const [
-            ListTile(
-              title: Text("SOBRE NÓS",
-                  style: TextStyle(color: Colors.white, fontSize: 18)),
-            ),
-            ListTile(
-              title: Text("CATÁLOGO",
-                  style: TextStyle(color: Colors.white, fontSize: 18)),
-            ),
-            ListTile(
-              title: Text("NOTÍCIAS",
-                  style: TextStyle(color: Colors.white, fontSize: 18)),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+            const SizedBox(height: 15),
 
-  Widget _buildWeatherCard() {
-    if (weatherData == null) {
-      return const Text("Erro ao carregar clima.");
-    }
-
-    double temp = weatherData!["main"]["temp"];
-    String description = weatherData!["weather"][0]["description"];
-
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF3F3F3),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.cloud, size: 55, color: Colors.blueGrey),
-          const SizedBox(width: 20),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "${temp.toStringAsFixed(1)}°C",
-                style: const TextStyle(
-                  fontSize: 40,
-                  fontWeight: FontWeight.bold,
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF414A37),
+                  padding: const EdgeInsets.all(14),
+                ),
+                onPressed: buscarRecomendacoes,
+                child: const Text(
+                  "Ver recomendações",
+                  style: TextStyle(fontSize: 18, color: Color(0xFFFFFFFF),),
                 ),
               ),
-              Text(
-                description,
-                style: const TextStyle(fontSize: 16),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
+            ),
 
-  Widget _buildNewsItem(String title, String subtitle, String img) {
-    return Row(
-      children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(title,
-                  style: const TextStyle(
-                      fontSize: 17, fontWeight: FontWeight.bold)),
-              Text(subtitle, style: TextStyle(color: Colors.grey[700])),
-            ],
-          ),
+            const SizedBox(height: 20),
+
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFF414A37),
+              ),onPressed:  ()async{
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => TelaLogin())
+                );
+              }, child: Text("Login Administrador", style: TextStyle(fontSize: 18, color: Color(0xFFFFFFFF),),
+              ),
+            ),
+            ),
+            const SizedBox(height: 20),
+
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFF414A37),
+              ),onPressed:  ()async{
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => TelaProduto())
+                );
+              }, child: Text("Produtos", style: TextStyle(fontSize: 18, color: Color(0xFFFFFFFF),),
+              ),
+              ),
+            ),
+            //LOGIN ADM
+
+            const SizedBox(height: 20),
+
+            Text(
+              mensagem,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            const SizedBox(height: 10),
+
+            Expanded(
+              child: ListView.builder(
+                itemCount: cafesRecomendados.length,
+                itemBuilder: (context, index) {
+                  Produto cafe = cafesRecomendados[index];
+
+                  return Card(
+                    child: ListTile(
+                      leading: const Icon(Icons.local_cafe),
+                      title: Text(cafe.nome ?? ""),
+                      subtitle: Text(cafe.descricao ?? ""),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
         ),
-        const SizedBox(width: 10),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(8),
-          child: Image.network(img, width: 90, height: 70, fit: BoxFit.cover),
-        ),
-      ],
+      ),
     );
   }
 }
