@@ -56,7 +56,7 @@ class _TelaHomeState extends State<TelaHome> {
     return Scaffold(
       drawer: _buildDrawer(),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF4B1F0E),
+        backgroundColor: Color(0xFF414A37),
         title: const Text(
           "PARAÍSO DO CAFÉ",
           style: TextStyle(color: Colors.white),

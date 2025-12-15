@@ -1,5 +1,7 @@
 import 'package:paraisodocafe/banco/database_helper.dart';
+import 'package:paraisodocafe/models/nacionalidade.dart';
 import 'package:paraisodocafe/models/produto.dart';
+import 'package:paraisodocafe/models/tipo.dart';
 
 
 class ProdutoDAO {
@@ -24,8 +26,6 @@ class ProdutoDAO {
     }
   }
 
-
-
   static Future imprimir() async {
     final db = await DatabaseHelper.getDatabase();
 
@@ -39,6 +39,33 @@ class ProdutoDAO {
         print(cafe);
       }
     }
+  }
+
+
+  static Future<List<Produto>> listarTodos() async {
+    final db = await DatabaseHelper.getDatabase();
+    final resultado = await db.query('tb_cafe');
+
+    return resultado.map((mapa) {
+      return Produto(
+        id: mapa['id_cafe'] as int,
+        nome: mapa['nm_cafe'] as String,
+        descricao: mapa['desc_cafe'] as String,
+        idNacionalidade: mapa['id_nacionalidade'] as int,
+        idTipo: mapa['id_tipo'] as int,
+      );
+    }).toList();
+  }
+
+
+  static Future<void> excluir(int? id) async{
+
+    final db = await DatabaseHelper.getDatabase();
+    final resultado = await db.query(
+        'tb_cafe',
+        where: 'id_cafe = ?',
+        whereArgs: [id]
+    );
   }
 }
 

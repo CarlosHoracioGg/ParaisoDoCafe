@@ -1,183 +1,100 @@
-/*import 'package:flutter/material.dart';
-import 'package:tst/banco/cafe_dao.dart'; // Seu DAO do banco
-import 'package:tst/cafe.dart'; // Seu modelo Cafe
-import 'tela_cad_produto.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:paraisodocafe/banco/produto_dao.dart';
+import 'package:paraisodocafe/models/produto.dart';
+import 'package:paraisodocafe/telas/tela_cad_produto.dart';
 
-class TelaProdutos extends StatefulWidget {
-  const TelaProdutos({super.key});
-
+class TelaProduto extends StatefulWidget{
+  TelaProduto ({super.key});
   @override
-  State<TelaProdutos> createState() => _TelaProdutosState();
+  State<TelaProduto> createState() => TelaProdutoState();
+}
+class TelaProdutoState extends State<TelaProduto>{
+List<Produto> produtos = [];
+  @override
+  void initState(){
+    super.initState();
+    carregarProdutos();
+  }
+
+Future<void> carregarProdutos() async{
+  final lista = await ProdutoDAO.listarTodos();
+  setState(() {
+    produtos = lista;
+  });
 }
 
-class _TelaProdutosState extends State<TelaProdutos> {
-  late Future<List<Cafe>> produtosDoBanco;
-
-  @override
-  void initState() {
-    super.initState();
-    _carregarProdutos();
-  }
-
-  void _carregarProdutos() {
-    produtosDoBanco = CafeDAO().listarProdutos(); // Função que retorna Future<List<Cafe>>
-  }
-
-  @override
-  Widget build(BuildContext context) {
+@override
+  Widget build(BuildContext context){
     return Scaffold(
-      backgroundColor: const Color(0xFFDBC2A6),
+      backgroundColor:  Color(0xFFDBC2A6),
       appBar: AppBar(
-        title: const Text('Produtos'),
-        titleTextStyle: const TextStyle(color: Colors.white, fontSize: 18),
-        backgroundColor: const Color(0xFF414A37),
+        title: const Text("Produtos"),
+        titleTextStyle: TextStyle(color: Color(0xFFFFFFFF)),
+        backgroundColor: Color(0xFF414A37),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () async {
-              final resultado = await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const TelaCadProduto(),
-                ),
-              );
-              if (resultado == true) {
-                setState(() {
-                  _carregarProdutos();
-                });
-              }
-            },
-          )
+          IconButton(onPressed: ()async{
+            final t = await Navigator.push(context, MaterialPageRoute(builder: (context)=>TelaCadProduto()));
+            if(t == false || t == null){
+              setState(() {
+                carregarProdutos();
+              });
+            }
+          }, icon: Icon(Icons.add))
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              Title(
-                color: Colors.white,
-                child: Text(
-                  "Nossos Produtos",
-                  style: TextStyle(color: Color(0xFFFFFFFF), fontSize: 30),
+      body: Padding(padding: EdgeInsets.all(10),
+      child: ListView.builder(
+          itemCount: produtos.length,
+          itemBuilder: (context, index) {
+            final r = produtos[index];
+            return Card(
+              margin: EdgeInsets.symmetric(vertical: 8),
+              child: ListTile(
+                title: Text(r.nome ?? 'sem nome'),
+                subtitle: Text('ID: ${r.id}'),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.delete, color: Colors.red),
+                      onPressed: () async {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                            title: const Text("ATENÇÃO"),
+                            content: const Text("Confirmar exclusão?"),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: const Text("Cancelar"),
+                              ),
+                              TextButton(
+                                onPressed: () async {
+                                  await ProdutoDAO.excluir(r.id);
+                                  await carregarProdutos();
+                                  Navigator.pop(context);
+                                },
+                                child: const Text("Sim"),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+
+                  ],
                 ),
               ),
-              const SizedBox(height: 20),
-
-              // ===========================
-              // PRODUTOS FIXOS
-              // ===========================
-              _produtoFixo(
-                "Café Especial",
-                "Grãos selecionados com torra média, aroma intenso e sabor encorpado. Ideal para amantes de um café de qualidade.",
-                28.90,
-              ),
-              _produtoFixo(
-                "Cappuccino Cremoso",
-                "Mistura premium para um cappuccino suave e cremoso. Pode ser preparado quente ou gelado.",
-                19.50,
-              ),
-              _produtoFixo(
-                "Biscoitos de Café",
-                "Deliciosos biscoitos artesanais com toque especial de café. Perfeitos para acompanhar sua bebida favorita.",
-                12.00,
-              ),
-
-              const SizedBox(height: 20),
-
-              // ===========================
-              // PRODUTOS DINÂMICOS DO BANCO
-              // ===========================
-              FutureBuilder<List<Cafe>>(
-                future: produtosDoBanco,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                        child: CircularProgressIndicator(
-                          color: Color(0xFF414A37),
-                        ));
-                  } else if (snapshot.hasError) {
-                    return Text('Erro: ${snapshot.error}');
-                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return const Text(
-                      'Nenhum produto cadastrado.',
-                      style: TextStyle(color: Colors.white),
-                    );
-                  } else {
-                    final produtos = snapshot.data!;
-                    return Column(
-                      children: produtos.map((produto) {
-                        return _produtoDinamico(produto);
-                      }).toList(),
-                    );
-                  }
-                },
-              ),
-              const SizedBox(height: 40),
-            ],
-          ),
+            );
+          }),
         ),
-      ),
+        bottomNavigationBar: BottomNavigationBar(
+          items: const<BottomNavigationBarItem>[
+            BottomNavigationBarItem(icon: Icon(Icons.add), label: 'Adicionar'),
+            BottomNavigationBarItem(icon: Icon(Icons.add), label: 'Adicionar'),
+          ]
+        ),
     );
-  }
-
-  // Função para criar produto fixo
-  Widget _produtoFixo(String nome, String descricao, double preco) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
-      margin: const EdgeInsets.only(bottom: 20),
-      decoration: BoxDecoration(
-        color: const Color(0xFF414A37),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(nome,
-              style: const TextStyle(
-                  color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 10),
-          Text(descricao,
-              style: const TextStyle(color: Colors.white, fontSize: 18)),
-          const SizedBox(height: 15),
-          Text("R\$ ${preco.toStringAsFixed(2)}",
-              style: const TextStyle(
-                  color: Color(0xFFDBC2A6),
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold)),
-        ],
-      ),
-    );
-  }
-
-  // Função para criar produto dinâmico
-  Widget _produtoDinamico(Cafe produto) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
-      margin: const EdgeInsets.only(bottom: 20),
-      decoration: BoxDecoration(
-        color: const Color(0xFF414A37),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(produto.nome,
-              style: const TextStyle(
-                  color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 10),
-          Text(produto.descricao,
-              style: const TextStyle(color: Colors.white, fontSize: 18)),
-          const SizedBox(height: 15),
-          Text("R\$ ${produto.preco.toStringAsFixed(2)}",
-              style: const TextStyle(
-                  color: Color(0xFFDBC2A6),
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold)),
-        ],
-      ),
-    );
-  }
-}*/
+}
+}

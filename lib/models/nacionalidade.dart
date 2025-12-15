@@ -3,6 +3,7 @@ class Nacionalidade{
   int? _id;
   String? _nome;
   String? _descricao;
+
   Nacionalidade({int? id, String? nome,String? descricao}){
     _id = id;
     _nome = nome;
