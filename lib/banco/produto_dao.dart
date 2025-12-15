@@ -58,14 +58,14 @@ class ProdutoDAO {
   }
 
 
-  static Future<void> excluir(int? id) async{
-
+  static Future<void> excluir(int? id) async {
     final db = await DatabaseHelper.getDatabase();
-    final resultado = await db.query(
-        'tb_cafe',
-        where: 'id_cafe = ?',
-        whereArgs: [id]
+    await db.delete(
+      'tb_cafe',
+      where: 'id_cafe = ?',
+      whereArgs: [id],
     );
   }
+
 }
 

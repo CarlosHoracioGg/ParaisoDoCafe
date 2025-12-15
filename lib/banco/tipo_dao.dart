@@ -5,10 +5,6 @@ class TipoDAO {
 
   static Future<int> cadastrarTipo(String nome, String desc) async{
     final db = await DatabaseHelper.getDatabase();
-
-
-
-
     final dados = {
       'nm_tipo': nome,
       'desc_tipo': desc
@@ -53,15 +49,15 @@ class TipoDAO {
         descricao: resultado.first['desc_nacionalidade'] as String
     );
   }
-
   static Future<void> excluir(int? id) async {
     final db = await DatabaseHelper.getDatabase();
-    final resultado = await db.query(
-        'tb_tipo',
-        where: 'id_tipo = ?',
-        whereArgs: [id]
+    await db.delete(
+      'tb_tipo',
+      where: 'id_tipo = ?',
+      whereArgs: [id],
     );
   }
+
 
   static Future<List<Tipo>> listarTodos() async {
     final db = await DatabaseHelper.getDatabase();

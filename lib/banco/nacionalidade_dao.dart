@@ -35,16 +35,15 @@ class NacionalidadeDAO {
         descricao: resultado.first['desc_nacionalidade'] as String
     );
   }
-
-  static Future<void> excluir(int? id) async{
-
+  static Future<void> excluir(int? id) async {
     final db = await DatabaseHelper.getDatabase();
-    final resultado = await db.query(
-        'tb_nacionalidade',
-        where: 'id_nacionalidade = ?',
-        whereArgs: [id]
+    await db.delete(
+      'tb_nacionalidade',
+      where: 'id_nacionalidade = ?',
+      whereArgs: [id],
     );
   }
+
 
   static Future<List<Nacionalidade>> listarTodos() async{
 
