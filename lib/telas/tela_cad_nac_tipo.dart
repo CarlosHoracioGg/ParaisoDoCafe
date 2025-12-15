@@ -64,10 +64,9 @@ class TelaCadNT extends StatelessWidget {
             ElevatedButton(onPressed: () async {
               final sucesso = await NacionalidadeDAO.cadastroNacionalidade(
                   nomenacController.text, descnacController.text);
-              final solucao = await TipoDAO.cadastrarTipo(
-                  nometipoController.text, desctipoController.text);
 
-              if (sucesso > 0 && solucao > 0) {
+              final imprimir = await NacionalidadeDAO.imprimir();
+              if (sucesso > 0) {
                 ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
@@ -77,12 +76,39 @@ class TelaCadNT extends StatelessWidget {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => TelaCadProduto())
                 );
+
+                return imprimir;
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text("Login ou sennha inválidos."))
                 );
               }
-            }, child: Text('Realizar Cadastro'))
+            }, child: Text('Realizar Cadastro')),
+
+            ElevatedButton(onPressed: () async{
+
+              final solucao = await TipoDAO.cadastrarTipo(
+                  nometipoController.text, desctipoController.text);
+
+              final imprimir = await TipoDAO.imprimir();
+              if(solucao > 0){
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                          "Tipo: ${nometipoController} cadastrados com sucesso!"),
+                      backgroundColor: Colors.green,)
+                );
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => TelaCadProduto())
+                );
+                return imprimir;
+              }else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Login ou sennha inválidos."))
+                );
+              }
+
+              },child: Text("Cadastro Tipo"))
 
 
           ],

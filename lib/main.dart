@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:paraisodocafe/telas/tela_cad_nac_tipo.dart';
+import 'package:paraisodocafe/telas/tela_cad_produto.dart';
 import 'package:paraisodocafe/telas/tela_cad_usuario.dart';
 
 void main() {
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       // desativa o modo banner ( que exibe conteudo).
       debugShowCheckedModeBanner: false,
-      home: TelaCadNT(),
+      home: TelaCadProduto(),
 
     );
   }

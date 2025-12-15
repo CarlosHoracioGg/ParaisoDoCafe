@@ -59,4 +59,21 @@ class NacionalidadeDAO {
       );
     }).toList();
   }
+
+
+
+  static Future imprimir() async {
+    final db = await DatabaseHelper.getDatabase();
+
+    final resultado = await db.query('tb_nacionalidade');
+
+    if (resultado.isEmpty) {
+      print("A tabela tb_nacionalidade está vazia.");
+    }  else {
+        print("📌 Nacionalidades Cadastradas:");
+        for (var nacionalidade in resultado) {
+        print(nacionalidade);
+    }
+}
+}
 }

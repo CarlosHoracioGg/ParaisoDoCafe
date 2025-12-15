@@ -23,6 +23,22 @@ class TipoDAO {
     }
   }
 
+
+  static Future imprimir() async {
+    final db = await DatabaseHelper.getDatabase();
+
+    final resultado = await db.query('tb_tipo');
+
+    if (resultado.isEmpty) {
+      print("A tabela tb_tipo está vazia.");
+    } else {
+      print("📌 Tipos Cadastradas:");
+      for (var tipo in resultado) {
+        print(tipo);
+      }
+    }
+  }
+
   static Future<Tipo> listar(int? id) async {
     final db = await DatabaseHelper.getDatabase();
     final resultado = await db.query(
