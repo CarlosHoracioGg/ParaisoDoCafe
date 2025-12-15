@@ -73,7 +73,7 @@ class TelaCadastro extends StatelessWidget{
 
             }, child: Text('Cadastrar'),
             ),
-
+            const SizedBox(height: 20,),
             //Botão ir ao Login
             ElevatedButton(onPressed: () async{
               await UsuarioDAO.imprimir();
